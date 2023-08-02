@@ -1,0 +1,126 @@
+Slide 1;
+Greeting: Chairpersons for your warm introductions, dear audience, thank you for coming to the last presentation of the day
+My name is Conall
+and I am happy to present my work on low-cost lunar landers to you today.
+
+Slide 2;
+The format of my presentation is pretty run of the mill. except at the end, to facilitate some good questions, I have a chocolate bar for everyone who asks me a question.
+
+Slide 3;
+So low cost lunar landers, what the context?
+Imagine... you are Neil Armstrong walking on the moon. You reach down - very hard in a spacesuit - and pick up a handful diamonds straight from the lunar surface. They're glittering in the sun you surely a bag of these will pay for the trip. But you'd be wrong.
+If Nasa intended to pay for the Apollo program by selling the 383kg of Lunar samples at cost of retrieval, they would have to sell them for 673M USD (2022) per kg. For comparison, rough diamond prices average around 12M/kg. This should show you that space travel to the moon, is ludicrously expensive. 
+
+Closer to home, it's better but still not cheap.
+To get to the ISS, if you want to save your money, you take a russion progress module. If you like quality and hate money, then you could take an ATV.
+
+So what is the effect of these gargantuan costs of space transportation.
+
+Slide 4;
+The effect is something I call the Gap.
+The gap between the space faring future we all want for humanity, and our current capabilities. Currently, we have humans in LEO, communications and navigations satellites, Apollo camping trips, but the above, are things which have been envisaged for a long long time but have never materialised.
+and they have not because of the giant costs standing between us and them. Cost is like Atlas who holds up the sky, keeping it out of our reach.
+So what does this project plan to do about that?
+In the context of Artemis and other proposed manned lunar bases I decided to tackle the cost of unmanned cargo transport to and from the lunar surface.
+
+Slide 5;
+specifically I intended to: 
+1 
+2
+
+Slide6;
+So how do we go about doing those two things.
+First, we need to imagine all of the different ways that cargo could be transported to the moon and back. We need to try to look at the whole tradespace of mission architectures. 
+To make mission architectures, we need a mission statement:
+read MS
+note timeframe
+
+Slide 7;
+From MS, we get functions,
+in the analysis to make it feasible and interesting, we set some ground rules and assumptions
+explain those
+
+Given all of that, I came up with 5 mission architectures to investigate the cost of lunar transport.
+
+Slide 8;
+I will only explain the two most representative one's for the sake of time, but after hearing about these, you can understand the other 3.
+first we have The Old Fashioned way: classical apollo architecture (name all the components, explain clearly what happens)
+
+Slide 10;
+I also looked at multi-stage reusable transfers like this one. (two stage transfer. explain clearly)
+
+Slide 9;
+the others are a 1 stage transfer called the magic carpet. because to do Trans lunar injection and landing and back again the vehicle would have to be as performant as a magic carpet. 
+
+slide 11;
+3 stager transfer
+
+slide 12;
+electric transfer
+
+slide 13;
+So how do we chose which has the best chance at being cheap whilst also carrying out all of the functional requirements we defined earlier.
+we do a trade-off.
+We choose figures of merit, give them a weighting using pairwise comparrison. we then evaluate all of the mission architectures on their figures of merit. We find out what is the XYZ
+to do that, we have to size all of the mission architectures and analyse their performance.
+
+Slide 14;
+In order to size the landers and transfer vehicles, I built some databases. 
+Landers, have these parameters.
+TVs have these, 
+lander subsystems for subsystem sizing
+
+Slide 15;
+The sizing method for the landers was the following. 
+explain mp to mdry line of best fit. 
+explain mdry to mprop adjusted Tsiolkovsky
+
+Slide 16;
+For the transfer vehicle. We size them according to their kinetic energy curves. we set the dry mass of the lander as the payload of the TV and the DV to that required by the mission architecture. find the TV with the closest curve and chose scale down the fuel requirement.
+
+Slide 17;
+for the lander subsystems
+I used average mass breakdowns of each of the subsystems to find out what they would weigh on my lander.
+
+Slide 18;
+And now, the important part. The cost. We what exactly do we mean when we talk about cost. In this project I analysed the life cycle cost of the mission architectures. so cradle to grave cost of DDTE + Constructio + operation + Disposal 
+
+Slide 19;
+We can use all of this mass data we will have to calculate the cost using TruePlanning, a powerful cost estimation tool which uses statistics and parametric cost relationships to estimate cost.
+
+Slide 20;
+So on to the results
+Regarding my second objective: estimating the maximu deliverable paylaoad to the lunar surface using current technology. i found the that using an electric transfer architecture would be best and with that you could deliver about 62 tons to the surface and lift 62 tons off the surface again. however the lander would have to be huge, and maybe their would be some showstoppers which would pop up in the design of a lander so large. 
+
+Slide 21;
+Looking at a more reasonable payload of 2t. I found that the 2-stage chemical transfer was best. because high speed and low cost.
+So using this, I designed a lander in more detail for this architecture.
+
+Slide 23;
+The lander weighs 23.2t
+with a dry mass of 5.9t 
+propellant mass of 15.3t giving a delta V of 5km/s
+And I thought, that if I have all this information about my lander, I should give it a name. So I called it ORLA, which is a Gaelic name who's old meaning is golden princess. Which is suitable for something which costs 256M dollars per flight model
+And since a picture tells a thousand words, I have some conceptual sketches of what she might look like,
+
+Slide 24; 
+I have broken my presentation format
+Main sizing dimensions that I knew for sure were the vilume of LO2 and LH2 tanks and the vlum of the cargo hold using the cygnus s/c as a benchmark.
+
+The lander is 9.7m tall, just under 4.2m wide and fits neatly into a falcon heavy fairing.
+So we have a nice mission architecture, and a nice lander, but at what cost in the end.
+
+Slide 25;
+The life cycle cost of a twi stage chemical transfer mission architecture with the ORLA lander is 7.2B
+specific cost now closer to that of LEO prices
+per trip.
+
+
+
+many more details if you're interested but I find a picture really tells a thousand words
+
+
+
+
+
+
