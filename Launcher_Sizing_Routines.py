@@ -1,0 +1,49 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Feb 18 16:48:24 2025
+
+@author: cdepaor
+"""
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+#%%
+class LV:
+    def __init__(self, name, launch_cost, mp2LEO, mp2TLI, Ek):
+        self.name = name
+        self.Lcost = launch_cost
+        self.mp2LEO = mp2LEO
+        self.mp2TLI = mp2TLI
+        self.Ek = Ek
+        
+#%%
+def routine_1(L): #dedicated launch. Gives the cheapest launcher from the database which can launch the payload to TLI. 
+    mpTLI_req = L.mt
+    count = 0#
+    DB = pd.read_excel(r"Launcher DB 251 redux.xlsx")
+    DB = DB.sort_values(by="$/launch")
+    can = []
+    for i in DB["mp2TLI"]:
+        # print(i)
+        if mpTLI_req < i:
+            LV1 = LV(DB["Launcher"][count], DB["$/launch"][count], DB["mp2LEO"][count], DB["mp2TLI"][count], DB["Ek"][count])    
+            break
+        count = count + 1
+    return LV1
+#%%
+def routine_2(L): #rideshare. Gives the cheapest launcher from the database which can launch the payload to TLI. 
+    mpTLI_req = L.mt
+    # mpTLI_req = 3000
+    count = 0#
+    DB = pd.read_excel(r"Launcher DB 251 redux.xlsx")
+    DB = DB.sort_values(by="$/kg TLI")
+    can = []
+    for i in DB["mp2TLI"]:
+        # print(i)
+        if mpTLI_req < i:
+            LV1 = LV(DB["Launcher"][count], DB["$/launch"][count], DB["mp2LEO"][count], DB["mp2TLI"][count], DB["Ek"][count])    
+            break
+        count = count + 1
+    return LV1
+
