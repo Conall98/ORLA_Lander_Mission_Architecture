@@ -18,7 +18,7 @@ class LV:
         self.Ek = Ek
         
 #%%
-def routine_1(L): #dedicated launch. Gives the cheapest launcher from the database which can launch the payload to TLI. 
+def routine_1(L): #dedicated TLI. Gives the cheapest launcher from the database which can launch the payload to TLI. 
     mpTLI_req = L.mt
     count = 0#
     DB = pd.read_excel(r"Launcher DB 251 redux.xlsx")
@@ -32,13 +32,13 @@ def routine_1(L): #dedicated launch. Gives the cheapest launcher from the databa
         count = count + 1
     return LV1
 #%%
-def routine_2(L): #rideshare. Gives the cheapest launcher from the database which can launch the payload to TLI. 
+def routine_2(L): #rideshare TLI. Gives the cheapest launcher from the database which can launch the payload to TLI. 
     mpTLI_req = L.mt
     # mpTLI_req = 3000
     count = 0#
     DB = pd.read_excel(r"Launcher DB 251 redux.xlsx")
     DB = DB.sort_values(by="$/kg TLI")
-    can = []
+
     for i in DB["mp2TLI"]:
         # print(i)
         if mpTLI_req < i:
@@ -47,3 +47,24 @@ def routine_2(L): #rideshare. Gives the cheapest launcher from the database whic
         count = count + 1
     return LV1
 
+#%%
+def routine_3(mp_req): #dedicated LEO. Gives the cheapest launcher from the database which can launch the payload to LEO
+    mpLEO_req = mp_req
+    # mpTLI_req = 3000
+    DB = pd.read_excel(r"Launcher DB 251 redux.xlsx")
+    DB = DB.sort_values(by="$/launch")
+    for i in DB["mp2LEO"]:
+        # print(i)
+        if mpLEO_req < i:
+            # print("this one: ", i)
+            index = pd.Index(DB["mp2LEO"]==i)
+            count = 0
+            for i in index:
+                if i==True:
+                    loc = count
+                    # print(loc)
+                count = count+1
+            DB = DB.reset_index()
+            LV1 = LV(DB["Launcher"][loc], DB["$/launch"][loc], DB["mp2LEO"][loc], DB["mp2TLI"][loc], DB["Ek"][loc])    
+            break
+    return LV1

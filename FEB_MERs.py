@@ -65,7 +65,12 @@ def Tsiolkovsky(L):
     mprop = L.mprop
     dv = L.dv
     isp = L.Isp
-    if dv - isp*9.81*np.log((mp+mprop+md)/(mp+md)) < dv/0.01:
+    # print("payload mass", mp, 
+    #       "\ndry mass", md, 
+    #       "\nmprop", mprop, 
+    #       "\ndv", dv, 
+    #       "\nIsp", isp)
+    if abs(dv - isp*9.81*np.log((mp+mprop+md)/(mp+md))) < dv/0.01:
         
         return True
     else:
