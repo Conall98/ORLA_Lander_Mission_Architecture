@@ -9,13 +9,7 @@ import Lander_Sizing_Routines as LANR
 import Launcher_Sizing_Routines as LAUR
 import TV_Sizing_Routine_Type1 as TVR
 # import pandas as pd
-#%% MA-5 2t
-mp = 2000
-L_dv = 2500
-L_Isp = 320
-
-L1, Test = LANR.routine_1(mp, L_dv, L_Isp)
-LV1 = LAUR.routine_1(L1)
+import numpy as np
 
 #%% calling the modules in the MA1 order
 def MA1(mp, L_dv, L_Isp):
@@ -31,13 +25,6 @@ def MA1(mp, L_dv, L_Isp):
     # mprop_per_cycle a key FOM    
     return L1, CLV1, CLV2, RLV1, Test_L
 
-#%% MA1 TEST
-mp = 5000
-L_dv = 5000 #LOPG - surface - LOPG
-L_Isp = 450
-
-B = MA1(mp, L_dv, L_Isp)
-vars(B[2])
 #%% MA-2 2t
 # calling the modules in the actual MA2 order
 
@@ -56,19 +43,11 @@ def MA2(mp, L_dv, L_Isp, Tdv):
     
     return L1, TV1, CLV1, CLV2, RLV1, Test_L, Test_TV
 
-#%% MA2 TEST
-mp = 5000
-L_dv = 5000 #LOPG - surface - LOPG
-L_Isp = 450
-Tdv = 3800 # LEO to LOPG
-A = MA2(mp, L_dv, L_Isp, Tdv)
-# vars(A[4])
-
 #%% MA-3 2t
 # calling the modules in the actual MA2 order
 
 #inputs
-def MA3(mp, L_dv, L_Isp, Tdv):
+def MA3(mp, L_dv, L_Isp, Tdv1, Tdv2):
     
     L1, Test_L = LANR.routine_1(mp, L_dv, L_Isp)
     # TV only has to take mp not the lander total masss
@@ -88,15 +67,112 @@ def MA3(mp, L_dv, L_Isp, Tdv):
     
     return L1, TV1, CLV1, CLV2, RLV1, TESTS
 
-#%% MA3 TEST
-mp = 5000
+
+#%% Outputs
+
+def MA4(mp, L_dv, L_Isp, Tdv):
+    L1, Test_L = LANR.routine_1(mp, L_dv, L_Isp)
+    TV1, Test_TV1 = TVR.routine_2(L1.mp, Tdv1) # use routine 2 for electric prop
+    
+    CLV1 = LAUR.routine_3(TV1.md)
+    CLV2 = LAUR.routine_3(L1.md)
+    
+    RLV1 = LAUR.routine_3(mp)
+    
+    TESTS = Test_L, Test_TV1
+    
+    return L1, TV1, CLV1, CLV2, RLV1, TESTS
+
+#%% MA-5 2t
+def MA5(mp, L_dv, L_Isp):
+
+    L1, Test_L = LANR.routine_1(mp, L_dv, L_Isp)
+    LV1 = LAUR.routine_3(L1.mt)
+    TESTS = Test_L
+    
+    return L1, LV1, TESTS
+
+
+#%% MA1 2t TEST
+mp = 2000
+L_dv = 5000 #LOPG - surface - LOPG
+L_Isp = 450
+
+MA1_obj_2t = MA1(mp, L_dv, L_Isp)
+#%% MA1 max
+mps = np.linspace(2000, 40000, 180)
+for i in mps:
+    MA1_obj_max = MA1(i, L_dv, L_Isp)
+    if MA1_obj_max[0].mprop > 60000: #the max constraint currently it is the 
+    #fuel to LEO constraint. Assuming one launch for the fuel. FH launches fuel
+        break
+    
+
+
+
+#%% MA2 2t TEST
+mp = 2000
+L_dv = 5000 #LOPG - surface - LOPG
+L_Isp = 450
+Tdv = 3800 # LEO to LOPG
+MA2_obj_2t = MA2(mp, L_dv, L_Isp, Tdv)
+#%% MA2 MAX
+mps = np.linspace(2000, 40000, 180)
+for i in mps:
+    MA2_obj_max = MA2(i, L_dv, L_Isp, Tdv)
+    if MA2_obj_max[1].mprop > 60000: #the max constraint currently it is the 
+    #fuel to LEO constraint. Assuming one launch for the fuel. FH launches fuel
+        break
+  
+
+#%% MA3 2t TEST
+mp = 2000
 L_dv = 5000 #LOPG - surface - LOPG
 L_Isp = 450
 Tdv1 = 3800 # LEO to LOPG
-Tdv2 = 3800 # LEO to LOPG
-MA2 = MA2(mp, L_dv, L_Isp, Tdv)
-# vars(A[4])
-#%% Outputs
+Tdv2 = 2*640 # LEO to LOPG
+MA3_obj_2t = MA3(mp, L_dv, L_Isp, Tdv1, Tdv2)
+#%% MA3 max
+mps = np.linspace(2000, 40000, 180)
+for i in mps:
+    MA3_obj_max = MA3(i, L_dv, L_Isp, Tdv1, Tdv2)
+    if MA3_obj_max[1].mprop > 60000: #the max constraint currently it is the 
+    #fuel to LEO constraint. Assuming one launch for the fuel. FH launches fuel
+        break
 
-# 
+
+#%% MA4 2t TEST
+mp = 2000
+L_dv = 5000 #LOPG - surface - LOPG
+L_Isp = 450
+Tdv1 = 3800 # LEO to LOPG
+MA4_obj_2t = MA4(mp, L_dv, L_Isp, Tdv1)
+#%% MA4 max
+mps = np.linspace(2000, 40000, 180)
+for i in mps:
+    MA4_obj_max = MA4(i, L_dv, L_Isp, Tdv1)
+    if MA4_obj_max[0].md > 60000: #the max constraint currently it is the 
+    #fuel to LEO constraint. Assuming one launch for the fuel. FH launches fuel
+        break
+
+#%%
+mp = 2000
+L_dv = 2500
+L_Isp = 450
+
+MA5_obj_2t = MA5(mp, L_dv, L_Isp)
+#%% MA5 max
+mps = np.linspace(2000, 60000, 180)
+for i in mps:
+    MA5_obj_max = MA5(i, L_dv, L_Isp)
+    if MA5_obj_max[0].mt > 95000: #the max constraint currently it is the 
+    #fuel to LEO constraint. Assuming one launch for the fuel. FH launches fuel
+        break
+
+
+
+
+
+
+
 
