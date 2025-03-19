@@ -22,13 +22,13 @@ class MA_FOM:
                  DT,
                  LP,
                  RP):
-        self.SAC = SAC
-        self.MMC = MMC
-        self.SPDC = SPDC
-        self.SPRC = SPRC
-        self.DT = DT
-        self.LP = LP
-        self.RP = RP
+        self.SAC = SAC # system acquisition cost
+        self.MMC = MMC # mission marginal cost
+        self.SPDC = SPDC # Specific Delivery Cost
+        self.SPRC = SPRC # Specific return cost
+        self.DT = DT # delivery time
+        self.LP = LP # landed payload
+        self.RP = RP # returned payload
     
 #%% MA1
 #MMC is launch cost +ten percent
