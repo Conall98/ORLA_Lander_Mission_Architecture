@@ -113,7 +113,7 @@ mp = 2000
 L_dv = 5000 #LOPG - surface - LOPG
 L_Isp = 450
 Tdv = 3800 # LEO to LOPG
-MA1_obj_2t = MA1(mp, L_dv, L_Isp)
+MA2_obj_2t = MA2(mp, L_dv, L_Isp, Tdv)
 #%% MA2 MAX
 mps = np.linspace(2000, 40000, 180)
 for i in mps:
