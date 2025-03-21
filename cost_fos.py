@@ -76,6 +76,7 @@ def SYSINT(Ci): #system integration cost
 #%% Accumulator
 
 def Acq_Cost(L):
+    # print("hello!!!!!!!!!!!!!!!")
     A = sum(STR(L.md) + AVIO(L.md) + OTH(L.md) + POW(L.md) + THER(L.md) + PRPLN(L.md))
     AC = SYSINT(A)
     return AC

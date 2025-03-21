@@ -126,3 +126,36 @@ plt.figure()
 plt.title("mp and dv")
 plt.scatter(i, bucket, label = "dry mass")
 plt.legend()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
