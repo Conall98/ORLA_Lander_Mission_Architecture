@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import pandas as pd
 import random
+import statistics as st
 #%%
 def func(x, a, b, c):
     return a*x**b + c
@@ -48,7 +49,8 @@ plt.legend()
 #%%% Random cherry picking pick half of the datapoints randomly and see what happens
 def MSA(xdata, ydata, foi):
     plt.figure()
-    xpoints = np.linspace(min(xdata), max(xdata), 1000)
+    points = 1000
+    xpoints = np.linspace(min(xdata), max(xdata), points)
     pairs = np.array([xdata,ydata])
     linesx = np.zeros([100, len(xpoints)])
     linesy = np.zeros([100, len(xpoints)])
@@ -75,7 +77,7 @@ def MSA(xdata, ydata, foi):
     plt.scatter(xdata, ydata, label='data', color = "red")
     plt.xlabel("Payload mass, $m_p$ [kg]")
     plt.ylabel("dry mass $m_d$ [kg]")
-    plt.title("$f_1 = m_d(m_p)$ Model Sensitivity Analysis")
+    plt.title("$f_1 = m_d(m_p)$ Model Sensitivity Analysis 1")
     
     #making histograms from lines
     # print(linesy)
@@ -95,6 +97,41 @@ lines = MSA(xdata, ydata, func)
 #%%
 for i in range (20, 30):
     histlines(lines[1], i)
+    
+#%% plotting the average and std
+mean_line = []
+upper_std = []
+lower_std = []
+u2s = []
+l2s = []
+u3s = []
+l3s = []
+for i in range(0, 1000):
+    m = np.mean(lines[1][:,i])
+    s = st.stdev(lines[1][:,i])
+    mean_line.append(m)
+    upper_std.append(m+s)
+    lower_std.append(m-s)
+    u2s.append(m+2*s)
+    l2s.append(m-2*s)
+    u3s.append(m+3*s)
+    l3s.append(m-3*s)
+#%%
+plt.figure()
+plt.plot(lines[0][0], mean_line, color = "#000000")
+plt.plot(lines[0][0], upper_std, color = "#999999", linestyle = "--")
+plt.plot(lines[0][0], lower_std, color = "#999999", linestyle = "--")
+plt.plot(lines[0][0], u2s, color = "#CCCCCC", linestyle = "--")
+plt.plot(lines[0][0], l2s, color = "#CCCCCC", linestyle = "--")
+plt.plot(lines[0][0], u3s, color = "#E1E1E1", linestyle = "--")
+plt.plot(lines[0][0], l3s, color = "#E1E1E1", linestyle = "--")
+
+plt.scatter(xdata, ydata, label='data', color = "red")
+plt.xlabel("Payload mass, $m_p$ [kg]")
+plt.ylabel("dry mass $m_d$ [kg]")
+plt.title("$f_1 = m_d(m_p)$ Model Sensitivity Analysis 2")
+plt.ylim(0, max(ydata))
+
 
 
 
