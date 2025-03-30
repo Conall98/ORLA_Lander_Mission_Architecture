@@ -4,19 +4,14 @@ Created on Thu Feb 13 16:32:44 2025
 
 @author: cdepaor
 """
+import numpy as np
+import matplotlib.pyplot as plt
+import math as m
+import pandas as pd
+import FEB_MERs as MER
+from FEB_MERs import L
+#%%
 def routine_1(mp, dv, Isp):
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import math as m
-    import pandas as pd
-    #%%
-    import FEB_MERs as MER
-    from FEB_MERs import L
-    
-    #%% inputs
-
-    
-    #%%
     md_init = MER.f1(mp)
     
     mprop_init = MER.f2(mp, md_init, dv, Isp)

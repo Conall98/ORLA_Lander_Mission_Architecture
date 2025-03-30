@@ -77,7 +77,9 @@ def SYSINT(Ci): #system integration cost
 
 def Acq_Cost(L):
     # print("hello!!!!!!!!!!!!!!!")
-    A = sum(STR(L.md) + AVIO(L.md) + OTH(L.md) + POW(L.md) + THER(L.md) + PRPLN(L.md))
+    # print(sum(STR(565.25)))
+    
+    A = sum(STR(L.STR) + AVIO(L.AVIO) + OTH(L.OTH) + POW(L.POW) + THER(L.THER) + PRPLN(L.PRPLSN))
     AC = SYSINT(A)
     return AC
 
@@ -120,6 +122,9 @@ def QC(md, POW):
     Prod_cost = Acq_cost - Dev_cost
     return np.round(Acq_cost*1000, 2), np.round(Dev_cost*1000, 2), np.round(Prod_cost*1000, 2)
     
+
+#advanced mission cost model shuold go here
+
 #%%
 # md = 4540
 # POW = 1000

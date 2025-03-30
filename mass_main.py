@@ -11,20 +11,63 @@ import TV_Sizing_Routine_Type1 as TVR
 # import pandas as pd
 import numpy as np
 
+# #%%
+# class MA():
+#     def __init__(self, ME1, ME2, ME3, ME4=None, ME5=None, ME6=None, ME7=None, TEST=None):
+#         self.ME1 = ME1
+#         self.ME2 = ME2
+#         self.ME3 = ME3
+#         self.ME4 = ME4
+#         self.ME5 = ME5
+#         self.ME6 = ME6
+#         self.ME7 = ME7
+#         self.TEST = TEST
+
+# class ME():        
+# def PPC(L, TV1 = None, TV2 = None): #for sizing the in-space propellant requirement
+#     TVprop = 0
+#     # print(L.mprop)
+#     Lprop = L.mprop
+#     if TV1 is not None:
+#         TVprop1 = TV1.mprop
+#         if TV2 is not None:
+#             TVprop2 = TV2.mprop
+#             TVpropT = TVprop1 + TVprop2
+#         else:
+#             TVpropT = TVprop1
+        
+#     total_prop = Lprop + TVprop
+#     return total_prop
+
 #%% calling the modules in the MA1 order
-def MA1(mp, L_dv, L_Isp):
+def MA1(mp, L_dv, L_Isp, T_dv):
     
     L1, Test_L = LANR.routine_1(mp, L_dv, L_Isp)
+    
     # TV only has to take mp not the lander total masss
 
     # construction launcher the dry mass of the lander and the transfer vehicle
     CLV1 = LAUR.routine_3(L1.md)
     CLV2 = LAUR.routine_3(L1.mprop) #assuming free fuel at LOPG
     # regular launcher only brings nominal payload every time
-    RLV1 = LAUR.routine_3(mp)
-    # mprop_per_cycle a key FOM    
-    return L1, CLV1, CLV2, RLV1, Test_L
+    
+    # mprop_per_cycle a key FOM 
+    #LOPG to surface to LOPG(5km/s) and LOPG to LEO(3.8km/s) to LOPG (km/s)
+    L_mprop2 = (L1.md+L1.mp)*(np.exp((3800)/(L_Isp*9.81)))
+    PPCi = np.round(L1.mprop + L_mprop2, 2)
+    
+    #assume ride share falcon 9 to LEO and to TLI for the fuel
 
+    RLV1 = LAUR.routine_3(mp)
+    
+    return L1, CLV1, CLV2, RLV1, Test_L, PPCi
+
+#%%
+mp = 2000
+L_dv = 5000
+L_Isp = 450
+T_dv = 3800
+MA1(mp, L_dv, L_Isp, T_dv)
 #%% MA-2 2t
 # calling the modules in the actual MA2 order
 
@@ -40,8 +83,9 @@ def MA2(mp, L_dv, L_Isp, Tdv):
     # regular launcher only brings nominal payload every time
     RLV1 = LAUR.routine_3(mp)
     # mprop_per_cycle a key FOM    
+    PPCi = L1.mprop + TV1.mprop
     
-    return L1, TV1, CLV1, CLV2, RLV1, Test_L, Test_TV
+    return L1, TV1, CLV1, CLV2, RLV1, Test_L, Test_TV, PPCi
 
 #%% MA-3 2t
 # calling the modules in the actual MA2 order
@@ -62,10 +106,12 @@ def MA3(mp, L_dv, L_Isp, Tdv1, Tdv2):
     # regular launcher only brings nominal payload every time
     RLV1 = LAUR.routine_3(mp)
     # mprop_per_cycle a key FOM    
+    # PPCi = PPC(L1, TV1, TV2)
+    PPCi = L1.mprop + TV1.mprop + TV2.mprop
     
     TESTS = Test_L, Test_TV1, Test_TV2
     
-    return L1, TV1, TV2, CLV1, CLV2, CLV3, RLV1, TESTS
+    return L1, TV1, TV2, CLV1, CLV2, CLV3, RLV1, TESTS, PPCi
 
 
 #%% Outputs
@@ -79,18 +125,21 @@ def MA4(mp, L_dv, L_Isp, Tdv):
     
     RLV1 = LAUR.routine_3(mp)
     
+    PPCi = L1.mprop + TV1.mprop
+    
     TESTS = Test_L, Test_TV1
     
-    return L1, TV1, CLV1, CLV2, RLV1, TESTS
+    return L1, TV1, CLV1, CLV2, RLV1, TESTS, PPCi
 
 #%% MA-5 2t
-def MA5(mp, L_dv, L_Isp):
+def MA5(mp, L_dv, L_Isp, T_dv):
 
-    L1, Test_L = LANR.routine_1(mp, L_dv, L_Isp)
+    L1, Test_L = LANR.routine_1(mp, L_dv/2, L_Isp)
     LV1 = LAUR.routine_3(L1.mt)
     TESTS = Test_L
+    PPCi = L1.mprop
     
-    return L1, LV1, TESTS
+    return L1, LV1, TESTS, PPCi
 
 
 # #%% MA1 2t TEST

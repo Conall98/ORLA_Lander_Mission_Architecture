@@ -10,12 +10,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 #%%
 class LV:
-    def __init__(self, name, launch_cost, mp2LEO, mp2TLI, Ek):
+    def __init__(self, name, launch_cost, mp2LEO, mp2TLI, Ek, role = None):
         self.name = name
         self.Lcost = launch_cost
         self.mp2LEO = mp2LEO
         self.mp2TLI = mp2TLI
         self.Ek = Ek
+        self.role = role
         
 #%%
 def routine_1(L): #dedicated TLI. Gives the cheapest launcher from the database which can launch the payload to TLI. 
