@@ -63,22 +63,24 @@ def MA1(mp, L_dv, L_Isp, T_dv):
     return L1, CLV1, CLV2, RLV1, Test_L, PPCi
 
 #%%
-mp = 2000
-L_dv = 5000
-L_Isp = 450
-T_dv = 3800
-MA1(mp, L_dv, L_Isp, T_dv)
+# mp = 2000
+# L_dv = 5000
+# L_Isp = 450
+# T_dv = 3800
+# MA1(mp, L_dv, L_Isp, T_dv)
 #%% MA-2 2t
 # calling the modules in the actual MA2 order
 
 #inputs
 def MA2(mp, L_dv, L_Isp, Tdv):
-    
+
     L1, Test_L = LANR.routine_1(mp, L_dv, L_Isp)
+    # print("B", L1.md)
     # TV only has to take mp not the lander total masss
     TV1, Test_TV = TVR.routine_3(L1.mp, Tdv)
     # construction launcher the dry mass of the lander and the transfer vehicle
     CLV1 = LAUR.routine_3(TV1.md)
+    # print("A",L1.md, mp)
     CLV2 = LAUR.routine_3(L1.md)
     # regular launcher only brings nominal payload every time
     RLV1 = LAUR.routine_3(mp)
@@ -86,6 +88,16 @@ def MA2(mp, L_dv, L_Isp, Tdv):
     PPCi = L1.mprop + TV1.mprop
     
     return L1, TV1, CLV1, CLV2, RLV1, Test_L, Test_TV, PPCi
+#%% 
+# mp = 2000
+# L_dv = 5000
+# L_Isp = 450
+# T_dv = 3800
+# mps = np.linspace(100, 10000, 100)
+# mds = []
+# for i in mps:
+#     MA_test = MA2(i, L_dv, L_Isp, T_dv)
+#     mds.append(MA_test[0].md)
 
 #%% MA-3 2t
 # calling the modules in the actual MA2 order
@@ -158,18 +170,18 @@ def MA5(mp, L_dv, L_Isp, T_dv):
     
 
 #%% MA2 2t TEST
-mp = 2000 
-L_dv = 5000 #LOPG - surface - LOPG
-L_Isp = 450
-Tdv = 3800 # LEO to LOPG
-MA2_obj_2t = MA2(mp, L_dv, L_Isp, Tdv)
-#%% MA2 MAX
-mps = np.linspace(2000, 40000, 180)
-for i in mps:
-    MA2_obj_max = MA2(i, L_dv, L_Isp, Tdv)
-    if MA2_obj_max[1].mprop > 60000: #the max constraint currently it is the 
-    #fuel to LEO constraint. Assuming one launch for the fuel. FH launches fuel
-        break
+# mp = 2000 
+# L_dv = 5000 #LOPG - surface - LOPG
+# L_Isp = 450
+# Tdv = 3800 # LEO to LOPG
+# MA2_obj_2t = MA2(mp, L_dv, L_Isp, Tdv)
+# #%% MA2 MAX
+# mps = np.linspace(2000, 40000, 180)
+# for i in mps:
+#     MA2_obj_max = MA2(i, L_dv, L_Isp, Tdv)
+#     if MA2_obj_max[1].mprop > 60000: #the max constraint currently it is the 
+#     #fuel to LEO constraint. Assuming one launch for the fuel. FH launches fuel
+#         break
   
 
 # #%% MA3 2t TEST

@@ -41,6 +41,9 @@ def f3(mp, mprop, A, B, C):
     x = mp+mprop
     return A*x**B+C
 
+def fp(x, a, b, c):
+    return a*x**2+b*x+c
+
 #%%
 plt.figure()
 plt.scatter(xdata, ydata, label='data', color = "black")
@@ -57,6 +60,48 @@ plt.grid(which = "major", color= "#bfbfbf")
 plt.grid(which = "minor", color = "#E6E6E6")
 plt.title("Unmanned Lunar Landers \n Payload Mass + Prop Mass Versus Dry Mass")
 plt.legend()
+
+
+#%% TP sizing rule replotting
+y1data = [7669432, 12462013,	16552061,	20244599, 23672831]
+y2data = [2532355,	4824784,	7039092,	9210067,	11349670]
+xdata = [100,	200,	300,	400,	500]
+
+y1data= [x/1e6 for x in y1data]
+y2data= [x/1e6 for x in y2data]
+
+popt, pcov = curve_fit(fp, xdata, y1data)
+popt2, pcov2 = curve_fit(fp, xdata, y2data)
+
+a = np.round(popt[0], 2)
+b = np.round(popt[1], 2)
+c = np.round(popt[2], 2)
+
+a2 = np.round(popt2[0], 2)
+b2 = np.round(popt2[1], 2)
+c2 = np.round(popt2[2], 2)
+
+
+plt.figure()
+plt.scatter(xdata, y1data, label='Dev cost data', color = "blue")
+plt.scatter(xdata, y2data, label='Prod cost data', color = "orange")
+
+np.linspace(min(xdata), max(xdata)+10, 100)
+
+plt.plot(np.linspace(min(xdata), max(xdata)+10, 100), fp(np.sort(np.linspace(min(xdata), max(xdata)+10, 100)), *popt), "--",color = "blue",
+          label=r"Dev cost model")
+
+plt.plot(np.linspace(min(xdata), max(xdata)+10, 100), fp(np.sort(np.linspace(min(xdata), max(xdata)+10, 100)), *popt2), "--",color = "orange",
+          label=r"Prod. cost model")
+
+plt.xlabel("Mass [kg]")
+plt.ylabel("Cost [M€]")
+plt.minorticks_on()
+plt.grid(which = "major", color= "#bfbfbf")
+plt.grid(which = "minor", color = "#E6E6E6")
+plt.title("Surrogate models for cost estimation of structure.")
+plt.legend()
+
 
 
 

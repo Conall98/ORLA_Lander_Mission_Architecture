@@ -13,23 +13,24 @@ from FEB_MERs import L
 #%%
 def routine_1(mp, dv, Isp):
     md_init = MER.f1(mp)
-    
+    # print("c md_init", md_init)
     mprop_init = MER.f2(mp, md_init, dv, Isp)
-    
+    # print("D mprop_init", mprop_init)
     mprop = [mprop_init]
     md = [md_init]
     mt = [md_init+mprop_init+mp]
     epsilon = 0.01
     
     for i in range(0, 100):
+        # print("F", MER.f3(mp, mprop[i]))
+        # print("G", mp, mprop[i])
+        # print("H", mp+mprop)
         md.append(MER.f3(mp, mprop[i]))
         mprop.append(MER.f2(mp, md[i+1], dv, Isp))
         mt.append(md[i+1]+mprop[i+1]+mp)
         if abs(md[i+1] - md[i]) < epsilon:
             break
-    
-    #%% subsystems sizing routine
-    
+    # print("E", md[-1])
     m_str = MER.STR(md[-1])
     m_prplsn = MER.PROP(md[-1])
     m_pow = MER.POW(md[-1])

@@ -55,7 +55,7 @@ def routine_3(mp_req): #dedicated LEO. Gives the cheapest launcher from the data
     DB = pd.read_excel(r"Launcher DB 251 redux.xlsx")
     DB = DB.sort_values(by="$/launch")
     for i in DB["mp2LEO"]:
-        # print(i)
+        # print(mpLEO_req, i)
         if mpLEO_req < i:
             # print("this one: ", i)
             index = pd.Index(DB["mp2LEO"]==i)
@@ -69,3 +69,5 @@ def routine_3(mp_req): #dedicated LEO. Gives the cheapest launcher from the data
             LV1 = LV(DB["Launcher"][loc], DB["$/launch"][loc], DB["mp2LEO"][loc], DB["mp2TLI"][loc], DB["Ek"][loc])    
             break
     return LV1
+#%% Test
+# LV1 = routine_3(1)

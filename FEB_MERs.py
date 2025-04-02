@@ -35,7 +35,7 @@ def f2(mp, md, dv, Isp):# gives mprop with mp+md
 
 def f3(mp, mprop):
     x = mp+mprop
-    return 39.09*x**0.44-251.76
+    return 12.49*x**0.55
 
 
 #%% subsystem functions
