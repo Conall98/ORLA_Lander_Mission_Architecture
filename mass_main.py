@@ -62,12 +62,12 @@ def MA1(mp, L_dv, L_Isp, T_dv):
     
     return L1, CLV1, CLV2, RLV1, Test_L, PPCi
 
-#%%
+# #%%
 # mp = 2000
 # L_dv = 5000
 # L_Isp = 450
 # T_dv = 3800
-# MA1(mp, L_dv, L_Isp, T_dv)
+# MA1 = MA1(mp, L_dv, L_Isp, T_dv)
 #%% MA-2 2t
 # calling the modules in the actual MA2 order
 

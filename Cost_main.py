@@ -55,27 +55,53 @@ def cost_main(MA, n, tvpow):    #mission architecture, number of missions
     
     
     # OP_cost = MA[4].Lcost*n
-    PLC = MA[-1]*2720 #just use falcon 9 rideshare cost to LEO time 1.5
+    FLC = 2720
+    PLC = MA[-1]*FLC #just use falcon 9 rideshare cost to LEO time 1.5
     OP_cost = (OLC+PLC)*n #find another operational cost model to add the other op costs
+        
     
 # =============================================================================
 # Adding it all together
 # =============================================================================
     LCC = Acq_cost + OP_cost
+    
+# =============================================================================
+#     parsing the marginal fuel cost and marginal dry mass
+# =============================================================================
+    #should be the Return_cost = mdr/md*LCC + mfr*FLC
+    mdr = m.LANR.MER.MDR(Lander)
+    mfr = m.LANR.MER.MFR(Lander)
+
+    MRC = Acq_cost*((mdr)/(Lander.md)) + mfr*FLC*n#marginal return cost
+    MSC = LCC - MRC
+    # MSC = OLC*n + Acq_cost*((Lander.md-mdr)/(Lander.md)) + (Lander.mprop - mfr)*FLC*n#marginal send cost
+
+    # print("A", MRC)
+    
+
     MA_costs = {"Life Cycle Cost [M€]": np.round(LCC/1e6, 2), 
                     "Acquisition Cost [M€]": np.round(Acq_cost/1e6,2), 
-                    "Total Operations Cost [M€]": np.round(OP_cost/1e6, 2)}
+                    "Total Operations Cost [M€]": np.round(OP_cost/1e6, 2),
+                    "Marginal Send cost [M€]": np.round(MSC/1e6, 2), 
+                    "Marginal Return cost [M€]": np.round(MRC/1e6, 2),
+                    "Test MRC + MSC == LCC": MRC + MSC == LCC}
     
     # Cost_breakdown = {"Lander total": np.round(L_lcc/1e6, 2), 
     #                 "TV total [M€]": np.round(TV_lcc/1e6,5), 
     #                 "Opcost [M€]": np.round(OP_cost/1e6, 2)}
     # Cost_breakdown = 1
     
+
     return MA_costs
     
 #%% Test
-# MA1_costs, sc_costs = cost_main(MA1, 20)
-# MA2_costs = cost_main(MA2, 20, 1000)
+#%% inputs
+mp = 2000
+L_dv = 5000
+L_Isp = 450
+T_dv = 3800
+T_dv2 = 2*640
+
 #%% Results function
 def results(MA, MA_costs, n, tvpow):
     MA_costs = cost_main(MA, n, tvpow)
@@ -86,9 +112,9 @@ def results(MA, MA_costs, n, tvpow):
     #Marginal Mission cost [€/mission]
     MMC = MA_costs["Total Operations Cost [M€]"]/n
     #Specific payload delivery cost [€/kg]
-    SPDC = MA_costs["Life Cycle Cost [M€]"]/(MA[0].mp*n)*10e6
+    SPDC = MA_costs["Marginal Send cost [M€]"]/(MA[0].mp*n)*10e6
     #specific payload return cost [€/kg]
-    SPRC = MA_costs["Life Cycle Cost [M€]"]/(MA[0].mp*n)*10e6 # should be just the extra fuel cost for this
+    SPRC = MA_costs["Marginal Return cost [M€]"]/(MA[0].mp*n)*10e6 # should be just the extra fuel cost for this
     #Delivery time [days]
     #DT = number of rdvs*days
     #Landed Payload per launch [kg/launch] #fuel launches will be the problem
@@ -102,12 +128,7 @@ def results(MA, MA_costs, n, tvpow):
 #%%
 DB = pd.read_excel(r"C:\Users\cdepaor2\Desktop\ORLA_Lander_Mission_Architecture\Lander DB 251 redux.xlsx")
 
-#%% inputs
-mp = 2000
-L_dv = 5000
-L_Isp = 450
-T_dv = 3800
-T_dv2 = 2*640
+
 #%% Masses
 MA1 = m.MA1(mp, L_dv, L_Isp, T_dv)
 MA2 = m.MA2(mp, L_dv, L_Isp, T_dv)
@@ -143,34 +164,33 @@ pc = "blue"
 fc = "orange"
 
 plt.figure()
-plt.bar(0, MA1_ef[1], 0.25, color=fc, label = "fuel")
+plt.bar(0, MA1_ef[1], 0.25, color=fc, label = "Propellant")
 plt.bar(0+w, MA1_ef[0], 0.25, color=pc, label = "payload")
 
-plt.bar(1, MA2_ef[1], 0.25, color=fc, label = "fuel")
-plt.bar(1+w, MA2_ef[0], 0.25, color=pc, label = "payload")
+plt.bar(1, MA2_ef[1], 0.25, color=fc)
+plt.bar(1+w, MA2_ef[0], 0.25, color=pc)
 
-plt.bar(2, MA3_ef[1], 0.25, color=fc, label = "fuel")
-plt.bar(2+w, MA3_ef[0], 0.25, color=pc, label = "payload")
+plt.bar(2, MA3_ef[1], 0.25, color=fc)
+plt.bar(2+w, MA3_ef[0], 0.25, color=pc)
 
-plt.bar(3, MA4_ef[1], 0.25, color=fc, label = "fuel")
-plt.bar(3+w, MA4_ef[0], 0.25, color=pc, label = "payload")
+plt.bar(3, MA4_ef[1], 0.25, color=fc)
+plt.bar(3+w, MA4_ef[0], 0.25, color=pc)
 
-plt.bar(4, MA5_ef[1], 0.25, color=fc, label = "fuel")
-plt.bar(4+w, MA5_ef[0], 0.25, color=pc, label = "payload")
+plt.bar(4, MA5_ef[1], 0.25, color=fc)
+plt.bar(4+w, MA5_ef[0], 0.25, color=pc)
 
 plt.xticks([0.125, 1.125, 2.125, 3.125, 4.125], ["MA1", "MA2", "MA3", "MA4", "MA5"])
 
 
 
 plt.xlabel("Mission Architectures")
-plt.ylabel("mass")
+plt.ylabel("$m_{prop}$ per $m_p$ [kg/kg]")
+plt.grid(axis = "y")
 plt.minorticks_on()
-plt.grid(which = "major", color= "#bfbfbf")
-plt.grid(which = "minor", color = "#E6E6E6")
-plt.title("Initial guess vs. sizing algorithm")
+# plt.grid(which = "major", color= "#bfbfbf")
+# plt.grid(which = "minor", color = "#E6E6E6")
+plt.title("Kg of fuel required for every kg of payload delivered")
 plt.legend()
-
-
 
 
 
@@ -216,6 +236,7 @@ plt.legend()
 # plt.plot(mps[1:], mds[1:,2], label = "$\Delta V = 5km/s$")
 # plt.plot(mps[1:], mds[1:,3], label = "$\Delta V = 6km/s$")
 
+
 # plt.xlabel("mp")
 # plt.ylabel("md")
 # plt.minorticks_on()
@@ -232,4 +253,11 @@ plt.legend()
 # mps = np.linspace(20, 100000, 1000)
 # plt.plot(mps, m.LANR.MER.f1(mps), "--",color = "red",
 #           label="Sizing rule")
+
+#%%
+import mass_main as m
+mdr = m.LANR.MER.MDR(MA1[0])
+mfr = m.LANR.MER.MFR(MA1[0])
+
+
 
