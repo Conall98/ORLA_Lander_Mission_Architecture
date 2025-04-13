@@ -76,7 +76,36 @@ def Tsiolkovsky(L):
     else:
         return False
 #%%
-
+def Tsiolkovsky_star(L):
+    mp = L.mp
+    md = L.md
+    mprop = L.mprop
+    dv = L.dv
+    dv_down = dv/2
+    dv_up = dv/2
+    Isp = L.Isp
+    
+    mprop_down = f2(mp, md, dv_down, Isp)
+    mprop_up = f2(0, md, dv_up, Isp)
+    
+    # print("A", mprop_up)
+    # print("B", mprop_down)
+    
+    if abs(dv_down - Isp*9.81*np.log((mp+mprop_down+md)/(mp+md))) < dv_down/0.01:
+        # print("C: Down should be true")
+        Down = True
+    else: 
+        Down = False
+        
+    if abs(dv_up - Isp*9.81*np.log((mprop_up+md)/(md))) < dv_up/0.01:
+        up = True
+    else:
+        up = False
+    
+    if Down == True & up == True:
+        return True
+    else: 
+        return False
 
 
 

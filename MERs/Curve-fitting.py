@@ -8,6 +8,7 @@ Created on Thu Feb 13 15:16:41 2025
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+from sklearn.metrics import r2_score as R2
 import pandas as pd
 import random
 import statistics as st
@@ -15,10 +16,10 @@ import statistics as st
 def func(x, a, b, c):
     return a*x**b + c
 
-def func2(x, a, b, c):
-    return a*np.log(b*x) +c
+def func2(x, a, c):
+    return a*np.log(x) + c
 #%%
-LDB = pd.read_excel(r"C:\Users\cdepaor2\Desktop\ORLA_Lander_Mission_Architecture\Lander DB 251 redux.xlsx", sheet_name = "All Real Landers")
+LDB = pd.read_excel(r"Lander DB 251 redux.xlsx", sheet_name = "All Real Landers")
 mp = np.array(LDB["mp"])
 mprop = np.array(LDB["mprop"])
 md = np.array(LDB["md"])
@@ -28,23 +29,30 @@ ydata = np.array(md)
 plt.figure()
 plt.scatter(xdata, ydata, label='data')
 #%% BAsic case
-popt, pcov = curve_fit(func, xdata, ydata)
-popt
+
+# popt
 xpoints = np.linspace(min(xdata), max(xdata), 100)
 # plt.plot(xpoints, func(np.sort(xpoints), *popt), color = "red",
 #          label='ax^b+c: a=%5.3f, b=%5.3f, c=%5.3f' % tuple(popt))
 
+
+popt, pcov = curve_fit(func, xdata, ydata)
+popt2, pcov2 = curve_fit(func2, xdata, ydata)
+
+ytrue = ydata
+ypred = func(xdata, *popt)
+R2_1 = np.round(R2(ytrue, ypred), 2)
+
+ypred2 = func2(xdata, *popt2)
+R2_2 = np.round(R2(ytrue, ypred2), 2)
+
 plt.plot(xpoints, func(np.sort(xpoints), *popt), color = "red",
-          label='power law')
-
-popt, pcov = curve_fit(func2, xdata, ydata)
-popt
-xpoints = np.linspace(min(xdata), max(xdata), 100)
-plt.plot(xpoints, func2(np.sort(xpoints), *popt), color = "blue",
-         label='log law')
-
+          label='power law, $R^2 = {0}$, coefs = {1}'.format(R2_2, popt))
+plt.plot(xpoints, func2(np.sort(xpoints), *popt2), color = "blue",
+         label='log law, $R^2 = {0}$, coefs = {1}'.format(R2_1, popt2))
 
 plt.legend()
+
 
 #%%% Random cherry picking pick half of the datapoints randomly and see what happens
 def MSA(xdata, ydata, foi):
@@ -131,7 +139,6 @@ plt.xlabel("Payload mass, $m_p$ [kg]")
 plt.ylabel("dry mass $m_d$ [kg]")
 plt.title("$f_1 = m_d(m_p)$ Model Sensitivity Analysis 2")
 plt.ylim(0, max(ydata))
-
 
 
 
