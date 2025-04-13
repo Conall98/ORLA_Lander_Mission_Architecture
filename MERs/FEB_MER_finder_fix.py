@@ -43,19 +43,19 @@ def f3(mp, mprop, A, B):
 
 #%%
 plt.figure()
-plt.scatter(xdata, ydata, label='data', color = "black")
+plt.scatter(xdata, ydata, label='Historical Lunar Landers', color = "black")
 
 np.linspace(min(xdata), max(xdata)+10, 100)
 
 plt.plot(np.linspace(min(xdata), max(xdata)+10, 100), func(np.sort(np.linspace(min(xdata), max(xdata)+10, 100)), *popt), "--",color = "red",
-          label=r"md = ${{{0}}} \cdot x^{{{1}}}$".format(A, B))
+          label=r"Trendline: $m_d$ = ${{{0}}} \cdot x^{{{1}}}$".format(A, B))
 
 plt.xlabel("mp + mprop")
 plt.ylabel("md")
 plt.minorticks_on()
 plt.grid(which = "major", color= "#bfbfbf")
 plt.grid(which = "minor", color = "#E6E6E6")
-plt.title("Unmanned Lunar Landers \n Payload Mass + Prop Mass Versus Dry Mass")
+plt.title("Historical Lunar Landers \n Payload Mass + Prop Mass Versus Dry Mass")
 plt.legend()
 
 

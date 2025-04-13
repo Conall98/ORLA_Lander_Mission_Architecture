@@ -53,7 +53,7 @@ def MA1(mp, L_dv, L_Isp, T_dv):
     
     # mprop_per_cycle a key FOM 
     #LOPG to surface to LOPG(5km/s) and LOPG to LEO(3.8km/s) to LOPG (km/s)
-    L_mprop2 = 2*(L1.md+L1.mp)*(np.exp((3800)/(L_Isp*9.81)))
+    L_mprop2 = (L1.md+L1.mp)*(np.exp((3800)/(L_Isp*9.81)))
     PPCi = np.round(L1.mprop + L_mprop2, 2)
     
     #assume ride share falcon 9 to LEO and to TLI for the fuel
@@ -62,36 +62,12 @@ def MA1(mp, L_dv, L_Isp, T_dv):
     
     return L1, CLV1, CLV2, RLV1, Test_L, PPCi
 
-#%% MA1 star
-def MA1_star(mp, L_dv, L_Isp, T_dv):
-    
-    L1, Test_L = LANR.routine_2(mp, L_dv, L_Isp)
-    
-    # TV only has to take mp not the lander total masss
-
-    # construction launcher the dry mass of the lander and the transfer vehicle
-    CLV1 = LAUR.routine_3(L1.md)
-    CLV2 = LAUR.routine_3(L1.mprop) #assuming free fuel at LOPG
-    # regular launcher only brings nominal payload every time
-    
-    # mprop_per_cycle a key FOM 
-    #LOPG to surface to LOPG(5km/s) and LOPG to LEO(3.8km/s) to LOPG (km/s)
-    L_mprop2_1 = (L1.md+L1.mp)*(np.exp((3800)/(L_Isp*9.81)))
-    L_mprop2_2 = (L1.md)*(np.exp((3800)/(L_Isp*9.81)))
-    PPCi = np.round(L1.mprop + L_mprop2_1 + L_mprop2_2, 2) #propellent per cycle
-    
-    #assume ride share falcon 9 to LEO and to TLI for the fuel
-
-    RLV1 = LAUR.routine_3(mp)
-    
-    return L1, CLV1, CLV2, RLV1, Test_L, PPCi 
-    
-#%%
+# #%%
 # mp = 2000
 # L_dv = 5000
 # L_Isp = 450
 # T_dv = 3800
-# MA1_star(mp, L_dv, L_Isp, T_dv)
+# MA1 = MA1(mp, L_dv, L_Isp, T_dv)
 #%% MA-2 2t
 # calling the modules in the actual MA2 order
 
